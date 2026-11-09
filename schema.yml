@@ -1,0 +1,2609 @@
+openapi: 3.0.3
+info:
+  title: Fish Dock REST API
+  version: 1.0.0
+  description: Official API for Fish Dock Fresh Seafood E-commerce Platform
+paths:
+  /api/v1/analytics/dashboard/:
+    get:
+      operationId: v1_analytics_dashboard_retrieve
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/me/:
+    get:
+      operationId: v1_auth_me_retrieve
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: v1_auth_me_partial_update
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/token/:
+    post:
+      operationId: v1_auth_token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomTokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomTokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomTokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomTokenObtainPair'
+          description: ''
+  /api/v1/auth/token/refresh/:
+    post:
+      operationId: v1_auth_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/v1/auth/users/:
+    get:
+      operationId: v1_auth_users_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserList'
+          description: ''
+    post:
+      operationId: v1_auth_users_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/v1/auth/users/{id}/:
+    get:
+      operationId: v1_auth_users_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: v1_auth_users_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: v1_auth_users_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    delete:
+      operationId: v1_auth_users_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/categories/:
+    get:
+      operationId: v1_categories_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCategoryList'
+          description: ''
+    post:
+      operationId: v1_categories_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Category'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Category'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+  /api/v1/categories/{slug}/:
+    get:
+      operationId: v1_categories_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+    put:
+      operationId: v1_categories_update
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Category'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Category'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+    patch:
+      operationId: v1_categories_partial_update
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCategory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCategory'
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+    delete:
+      operationId: v1_categories_destroy
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/categories/reorder/:
+    post:
+      operationId: v1_categories_reorder_create
+      description: 'Expects a list of objects: [{''id'': ''...'', ''display_order'':
+        0}, ...]'
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/content/banners/:
+    get:
+      operationId: v1_content_banners_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBannerList'
+          description: ''
+    post:
+      operationId: v1_content_banners_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Banner'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Banner'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Banner'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Banner'
+          description: ''
+  /api/v1/content/banners/{id}/:
+    get:
+      operationId: v1_content_banners_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Banner'
+          description: ''
+    put:
+      operationId: v1_content_banners_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Banner'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Banner'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Banner'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Banner'
+          description: ''
+    patch:
+      operationId: v1_content_banners_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBanner'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedBanner'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedBanner'
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Banner'
+          description: ''
+    delete:
+      operationId: v1_content_banners_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/content/faqs/:
+    get:
+      operationId: v1_content_faqs_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFAQList'
+          description: ''
+    post:
+      operationId: v1_content_faqs_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FAQ'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FAQ'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FAQ'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FAQ'
+          description: ''
+  /api/v1/content/testimonials/:
+    get:
+      operationId: v1_content_testimonials_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTestimonialList'
+          description: ''
+    post:
+      operationId: v1_content_testimonials_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Testimonial'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Testimonial'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Testimonial'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Testimonial'
+          description: ''
+  /api/v1/inventory/:
+    get:
+      operationId: v1_inventory_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInventoryList'
+          description: ''
+  /api/v1/inventory/adjust/{id}/:
+    post:
+      operationId: v1_inventory_adjust_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/orders/:
+    post:
+      operationId: v1_orders_create
+      description: |-
+        Public / Guest order submission endpoint.
+        Saves the complete order before generating WhatsApp link.
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/orders/admin/:
+    get:
+      operationId: v1_orders_admin_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrderDetailList'
+          description: ''
+  /api/v1/orders/admin/{id}/:
+    get:
+      operationId: v1_orders_admin_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDetail'
+          description: ''
+  /api/v1/orders/admin/{id}/confirm-price/:
+    post:
+      operationId: v1_orders_admin_confirm_price_create
+      description: Admin confirms finalized market prices and exact weights agreed
+        with customer on WhatsApp.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/orders/admin/{id}/status/:
+    post:
+      operationId: v1_orders_admin_status_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/orders/admin/export-csv/:
+    get:
+      operationId: v1_orders_admin_export_csv_retrieve
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/orders/track/:
+    get:
+      operationId: v1_orders_track_retrieve
+      description: Public tracking view for customers.
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/pricing/history/:
+    get:
+      operationId: v1_pricing_history_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPriceHistoryList'
+          description: ''
+  /api/v1/pricing/update/{id}/:
+    post:
+      operationId: v1_pricing_update_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/products/:
+    get:
+      operationId: v1_products_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProductListList'
+          description: ''
+    post:
+      operationId: v1_products_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductWrite'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductWrite'
+          description: ''
+  /api/v1/products/{id}/toggle-status/:
+    post:
+      operationId: v1_products_toggle_status_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/products/{slug}/:
+    get:
+      operationId: v1_products_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetail'
+          description: ''
+    put:
+      operationId: v1_products_update
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductWrite'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductWrite'
+          description: ''
+    patch:
+      operationId: v1_products_partial_update
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProductWrite'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProductWrite'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProductWrite'
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductWrite'
+          description: ''
+    delete:
+      operationId: v1_products_destroy
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/settings/admin/:
+    get:
+      operationId: v1_settings_admin_retrieve
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: v1_settings_admin_create
+      description: |-
+        Updates multiple settings at once:
+        {"settings": [{"key": "WHATSAPP_BUSINESS_NUMBER", "value": "+8801711111111"}, ...]}
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/settings/public/:
+    get:
+      operationId: v1_settings_public_retrieve
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+components:
+  schemas:
+    Banner:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        subtitle:
+          type: string
+          nullable: true
+          maxLength: 300
+        badge_text:
+          type: string
+          maxLength: 60
+        image_url:
+          type: string
+          format: uri
+          maxLength: 500
+        button_text:
+          type: string
+          maxLength: 50
+        link_url:
+          type: string
+          maxLength: 255
+        display_order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - image_url
+      - title
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 120
+        bangla_name:
+          type: string
+          nullable: true
+          maxLength: 150
+        slug:
+          type: string
+          maxLength: 150
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+          nullable: true
+        icon_name:
+          type: string
+          description: Icon identifier such as 'fish', 'waves', 'shrimp', 'crab',
+            etc.
+          maxLength: 50
+        image_url:
+          nullable: true
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 500
+          - type: string
+            maxLength: 0
+        display_order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        is_active:
+          type: boolean
+        product_count:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - name
+      - product_count
+      - slug
+      - updated_at
+    CustomTokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - username
+    FAQ:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        question:
+          type: string
+          maxLength: 300
+        answer:
+          type: string
+        category:
+          type: string
+          maxLength: 80
+        display_order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - answer
+      - created_at
+      - id
+      - question
+    Inventory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        product:
+          type: string
+          format: uuid
+        product_name:
+          type: string
+          readOnly: true
+        product_slug:
+          type: string
+          readOnly: true
+        product_unit:
+          type: string
+          readOnly: true
+        category_name:
+          type: string
+          readOnly: true
+        track_stock:
+          type: boolean
+          description: Enable or disable stock tracking for this product
+        available_quantity:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        reserved_quantity:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        low_stock_threshold:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        is_out_of_stock:
+          type: boolean
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryTransaction'
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - category_name
+      - id
+      - product
+      - product_name
+      - product_slug
+      - product_unit
+      - transactions
+      - updated_at
+    InventoryTransaction:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        inventory:
+          type: string
+          format: uuid
+        transaction_type:
+          $ref: '#/components/schemas/TransactionTypeEnum'
+        quantity:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        balance_after:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        reason:
+          type: string
+          maxLength: 255
+        created_by:
+          type: integer
+          nullable: true
+        created_by_username:
+          type: string
+          readOnly: true
+          default: System
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - balance_after
+      - created_at
+      - created_by_username
+      - id
+      - inventory
+      - quantity
+      - reason
+    OrderDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        order_reference:
+          type: string
+          description: Unique customer-facing order ID (e.g. FD-2026-1001)
+          maxLength: 32
+        customer_name:
+          type: string
+          maxLength: 150
+        customer_phone:
+          type: string
+          maxLength: 25
+        customer_email:
+          nullable: true
+          oneOf:
+          - type: string
+            format: email
+            maxLength: 254
+          - type: string
+            maxLength: 0
+        delivery_address:
+          type: string
+        delivery_area:
+          type: string
+          description: Neighborhood or area for logistics dispatch
+          maxLength: 100
+        delivery_city:
+          type: string
+          maxLength: 60
+        preferred_delivery_slot:
+          type: string
+          description: Morning, Afternoon, Evening, or Express
+          maxLength: 100
+        customer_notes:
+          type: string
+          nullable: true
+          description: Customer instructions, special cleaning/cutting requests
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        whatsapp_status:
+          $ref: '#/components/schemas/WhatsappStatusEnum'
+        indicative_subtotal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          description: Sum of indicative item prices at time of request
+        delivery_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+        final_confirmed_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+          description: Actual finalized price agreed with customer via WhatsApp
+        admin_notes:
+          type: string
+          nullable: true
+          description: Internal staff notes, e.g. 'Customer requested 2 big pieces'
+        confirmed_by_name:
+          type: string
+          readOnly: true
+        confirmed_at:
+          type: string
+          format: date-time
+          nullable: true
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+          readOnly: true
+        status_history:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderStatusHistory'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - confirmed_by_name
+      - created_at
+      - customer_name
+      - customer_phone
+      - delivery_address
+      - id
+      - items
+      - order_reference
+      - status_history
+      - updated_at
+    OrderItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        product:
+          type: string
+          format: uuid
+          nullable: true
+        product_name_snapshot:
+          type: string
+          maxLength: 200
+        unit_snapshot:
+          type: string
+          maxLength: 20
+        standard_weight_range_snapshot:
+          type: string
+          nullable: true
+          maxLength: 100
+        quantity:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          description: Quantity or weight in specified unit
+        unit_price_snapshot:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          description: Indicative unit price when order was submitted
+        indicative_total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        final_unit_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Final price agreed per unit
+        final_total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+          description: Final amount for this item
+        quantity_adjusted:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          nullable: true
+          description: Adjusted weight after weighing exact fresh fish
+        adjustment_reason:
+          type: string
+          nullable: true
+          description: e.g. 'Padma Ilish was exactly 1.15 kg'
+          maxLength: 255
+        cutting_instruction:
+          type: string
+          description: e.g. 'Whole', 'Curry Cut', 'Steak Cut', 'Cleaned'
+          maxLength: 100
+      required:
+      - id
+      - product_name_snapshot
+      - quantity
+    OrderStatusHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        previous_status:
+          type: string
+          nullable: true
+          maxLength: 40
+        new_status:
+          type: string
+          maxLength: 40
+        changed_by_name:
+          type: string
+          readOnly: true
+          default: System / Customer
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - changed_by_name
+      - created_at
+      - id
+      - new_status
+    PaginatedBannerList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Banner'
+    PaginatedCategoryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+    PaginatedFAQList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FAQ'
+    PaginatedInventoryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Inventory'
+    PaginatedOrderDetailList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderDetail'
+    PaginatedPriceHistoryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceHistory'
+    PaginatedProductListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductList'
+    PaginatedTestimonialList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Testimonial'
+    PaginatedUserList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    PatchedBanner:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        subtitle:
+          type: string
+          nullable: true
+          maxLength: 300
+        badge_text:
+          type: string
+          maxLength: 60
+        image_url:
+          type: string
+          format: uri
+          maxLength: 500
+        button_text:
+          type: string
+          maxLength: 50
+        link_url:
+          type: string
+          maxLength: 255
+        display_order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedCategory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 120
+        bangla_name:
+          type: string
+          nullable: true
+          maxLength: 150
+        slug:
+          type: string
+          maxLength: 150
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+          nullable: true
+        icon_name:
+          type: string
+          description: Icon identifier such as 'fish', 'waves', 'shrimp', 'crab',
+            etc.
+          maxLength: 50
+        image_url:
+          nullable: true
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 500
+          - type: string
+            maxLength: 0
+        display_order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        is_active:
+          type: boolean
+        product_count:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedProductWrite:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        bangla_name:
+          type: string
+          nullable: true
+          maxLength: 200
+        slug:
+          type: string
+          maxLength: 220
+          pattern: ^[-a-zA-Z0-9_]+$
+        category:
+          type: string
+          format: uuid
+        short_description:
+          type: string
+          nullable: true
+          maxLength: 300
+        full_description:
+          type: string
+          nullable: true
+        origin:
+          type: string
+          nullable: true
+          description: Catch location, e.g. 'Padma River, Chandpur' or 'Bay of Bengal'
+          maxLength: 150
+        freshness_grade:
+          type: string
+          description: e.g. 'Grade A – Morning Catch', 'Live Catch', 'Deep Sea Fresh'
+          maxLength: 100
+        unit:
+          $ref: '#/components/schemas/UnitEnum'
+        standard_weight_range:
+          type: string
+          nullable: true
+          description: e.g. '≈ 800g – 1kg (per piece)' or '≈ 1.5 – 2 kg (per piece)'
+          maxLength: 100
+        base_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          description: Indicative or listed price in BDT per unit
+        price_display_type:
+          $ref: '#/components/schemas/PriceDisplayTypeEnum'
+        price_notice_label:
+          type: string
+          description: Label shown on customer card and detail page
+          maxLength: 150
+        min_order_qty:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        max_order_qty:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        step_qty:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        allows_cutting_instructions:
+          type: boolean
+          description: Whether customer can specify cutting preferences (Curry Cut,
+            Whole, Steak Cut, Gutted)
+        is_active:
+          type: boolean
+        is_featured:
+          type: boolean
+        is_popular:
+          type: boolean
+        is_seasonal:
+          type: boolean
+        is_fresh_arrival:
+          type: boolean
+        image_urls:
+          type: array
+          items:
+            type: string
+            format: uri
+          writeOnly: true
+    PatchedUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          title: Email address
+          oneOf:
+          - type: string
+            format: email
+            maxLength: 254
+          - type: string
+            maxLength: 0
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        address:
+          type: string
+          nullable: true
+        avatar_url:
+          nullable: true
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 500
+          - type: string
+            maxLength: 0
+        is_staff:
+          type: boolean
+          title: Staff status
+          description: Designates whether the user can log into this admin site.
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+        last_login:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+    PriceDisplayTypeEnum:
+      enum:
+      - indicative
+      - fixed
+      - subject_to_confirmation
+      - contact_for_price
+      type: string
+      description: |-
+        * `indicative` - Indicative Price
+        * `fixed` - Fixed Listed Price
+        * `subject_to_confirmation` - Price Subject to Confirmation
+        * `contact_for_price` - Contact for Current Price
+    PriceHistory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        product:
+          type: string
+          format: uuid
+        product_name:
+          type: string
+          readOnly: true
+        previous_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          readOnly: true
+        new_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        effective_date:
+          type: string
+          format: date-time
+        reason:
+          type: string
+          description: Reason for price adjustment (e.g. morning landing rate, storm
+            in bay, festival demand)
+          maxLength: 255
+        changed_by:
+          type: integer
+          nullable: true
+        changed_by_username:
+          type: string
+          readOnly: true
+          default: System
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - changed_by_username
+      - created_at
+      - id
+      - new_price
+      - previous_price
+      - product
+      - product_name
+    ProductDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        bangla_name:
+          type: string
+          nullable: true
+          maxLength: 200
+        slug:
+          type: string
+          maxLength: 220
+          pattern: ^[-a-zA-Z0-9_]+$
+        category:
+          allOf:
+          - $ref: '#/components/schemas/Category'
+          readOnly: true
+        short_description:
+          type: string
+          nullable: true
+          maxLength: 300
+        full_description:
+          type: string
+          nullable: true
+        origin:
+          type: string
+          nullable: true
+          description: Catch location, e.g. 'Padma River, Chandpur' or 'Bay of Bengal'
+          maxLength: 150
+        freshness_grade:
+          type: string
+          description: e.g. 'Grade A – Morning Catch', 'Live Catch', 'Deep Sea Fresh'
+          maxLength: 100
+        unit:
+          $ref: '#/components/schemas/UnitEnum'
+        standard_weight_range:
+          type: string
+          nullable: true
+          description: e.g. '≈ 800g – 1kg (per piece)' or '≈ 1.5 – 2 kg (per piece)'
+          maxLength: 100
+        base_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          description: Indicative or listed price in BDT per unit
+        price_display_type:
+          $ref: '#/components/schemas/PriceDisplayTypeEnum'
+        price_notice_label:
+          type: string
+          description: Label shown on customer card and detail page
+          maxLength: 150
+        market_price_updated_at:
+          type: string
+          format: date-time
+        min_order_qty:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        max_order_qty:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        step_qty:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        allows_cutting_instructions:
+          type: boolean
+          description: Whether customer can specify cutting preferences (Curry Cut,
+            Whole, Steak Cut, Gutted)
+        is_active:
+          type: boolean
+        is_featured:
+          type: boolean
+        is_popular:
+          type: boolean
+        is_seasonal:
+          type: boolean
+        is_fresh_arrival:
+          type: boolean
+        views_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductImage'
+          readOnly: true
+        primary_image_url:
+          type: string
+          readOnly: true
+        in_stock:
+          type: string
+          readOnly: true
+        available_stock:
+          type: string
+          readOnly: true
+        related_products:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - available_stock
+      - base_price
+      - category
+      - created_at
+      - id
+      - images
+      - in_stock
+      - name
+      - primary_image_url
+      - related_products
+      - slug
+      - updated_at
+    ProductImage:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        image_url:
+          type: string
+          format: uri
+          maxLength: 500
+        alt_text:
+          type: string
+          nullable: true
+          maxLength: 200
+        is_primary:
+          type: boolean
+        display_order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+      required:
+      - id
+      - image_url
+    ProductList:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        bangla_name:
+          type: string
+          nullable: true
+          maxLength: 200
+        slug:
+          type: string
+          maxLength: 220
+          pattern: ^[-a-zA-Z0-9_]+$
+        category:
+          type: string
+          format: uuid
+        category_name:
+          type: string
+          readOnly: true
+        category_slug:
+          type: string
+          readOnly: true
+        short_description:
+          type: string
+          nullable: true
+          maxLength: 300
+        origin:
+          type: string
+          nullable: true
+          description: Catch location, e.g. 'Padma River, Chandpur' or 'Bay of Bengal'
+          maxLength: 150
+        freshness_grade:
+          type: string
+          description: e.g. 'Grade A – Morning Catch', 'Live Catch', 'Deep Sea Fresh'
+          maxLength: 100
+        unit:
+          $ref: '#/components/schemas/UnitEnum'
+        standard_weight_range:
+          type: string
+          nullable: true
+          description: e.g. '≈ 800g – 1kg (per piece)' or '≈ 1.5 – 2 kg (per piece)'
+          maxLength: 100
+        base_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          description: Indicative or listed price in BDT per unit
+        price_display_type:
+          $ref: '#/components/schemas/PriceDisplayTypeEnum'
+        price_notice_label:
+          type: string
+          description: Label shown on customer card and detail page
+          maxLength: 150
+        market_price_updated_at:
+          type: string
+          format: date-time
+        min_order_qty:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        max_order_qty:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        step_qty:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        allows_cutting_instructions:
+          type: boolean
+          description: Whether customer can specify cutting preferences (Curry Cut,
+            Whole, Steak Cut, Gutted)
+        is_active:
+          type: boolean
+        is_featured:
+          type: boolean
+        is_popular:
+          type: boolean
+        is_seasonal:
+          type: boolean
+        is_fresh_arrival:
+          type: boolean
+        primary_image_url:
+          type: string
+          readOnly: true
+      required:
+      - base_price
+      - category
+      - category_name
+      - category_slug
+      - id
+      - name
+      - primary_image_url
+      - slug
+    ProductWrite:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        bangla_name:
+          type: string
+          nullable: true
+          maxLength: 200
+        slug:
+          type: string
+          maxLength: 220
+          pattern: ^[-a-zA-Z0-9_]+$
+        category:
+          type: string
+          format: uuid
+        short_description:
+          type: string
+          nullable: true
+          maxLength: 300
+        full_description:
+          type: string
+          nullable: true
+        origin:
+          type: string
+          nullable: true
+          description: Catch location, e.g. 'Padma River, Chandpur' or 'Bay of Bengal'
+          maxLength: 150
+        freshness_grade:
+          type: string
+          description: e.g. 'Grade A – Morning Catch', 'Live Catch', 'Deep Sea Fresh'
+          maxLength: 100
+        unit:
+          $ref: '#/components/schemas/UnitEnum'
+        standard_weight_range:
+          type: string
+          nullable: true
+          description: e.g. '≈ 800g – 1kg (per piece)' or '≈ 1.5 – 2 kg (per piece)'
+          maxLength: 100
+        base_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          description: Indicative or listed price in BDT per unit
+        price_display_type:
+          $ref: '#/components/schemas/PriceDisplayTypeEnum'
+        price_notice_label:
+          type: string
+          description: Label shown on customer card and detail page
+          maxLength: 150
+        min_order_qty:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        max_order_qty:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        step_qty:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        allows_cutting_instructions:
+          type: boolean
+          description: Whether customer can specify cutting preferences (Curry Cut,
+            Whole, Steak Cut, Gutted)
+        is_active:
+          type: boolean
+        is_featured:
+          type: boolean
+        is_popular:
+          type: boolean
+        is_seasonal:
+          type: boolean
+        is_fresh_arrival:
+          type: boolean
+        image_urls:
+          type: array
+          items:
+            type: string
+            format: uri
+          writeOnly: true
+      required:
+      - base_price
+      - category
+      - id
+      - name
+      - slug
+    RoleEnum:
+      enum:
+      - super_admin
+      - admin
+      - order_manager
+      - product_manager
+      - inventory_manager
+      - support_agent
+      - customer
+      type: string
+      description: |-
+        * `super_admin` - Super Admin
+        * `admin` - Administrator
+        * `order_manager` - Order Manager
+        * `product_manager` - Product Manager
+        * `inventory_manager` - Inventory Manager
+        * `support_agent` - Support Agent
+        * `customer` - Customer
+    StatusEnum:
+      enum:
+      - pending_confirmation
+      - awaiting_customer_response
+      - price_confirmed
+      - confirmed
+      - processing
+      - ready_for_delivery
+      - out_for_delivery
+      - delivered
+      - cancelled
+      - rejected
+      type: string
+      description: |-
+        * `pending_confirmation` - Pending Confirmation
+        * `awaiting_customer_response` - Awaiting Customer Response
+        * `price_confirmed` - Price Confirmed
+        * `confirmed` - Confirmed
+        * `processing` - Processing & Cutting
+        * `ready_for_delivery` - Ready for Delivery
+        * `out_for_delivery` - Out for Delivery
+        * `delivered` - Delivered
+        * `cancelled` - Cancelled
+        * `rejected` - Rejected
+    Testimonial:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        customer_name:
+          type: string
+          maxLength: 120
+        customer_area:
+          type: string
+          maxLength: 120
+        rating:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        comment:
+          type: string
+        avatar_url:
+          nullable: true
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 500
+          - type: string
+            maxLength: 0
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - comment
+      - created_at
+      - customer_name
+      - id
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    TransactionTypeEnum:
+      enum:
+      - restock
+      - order_reservation
+      - order_deduction
+      - manual_adjustment
+      - spoilage_waste
+      type: string
+      description: |-
+        * `restock` - Morning Catch Restock
+        * `order_reservation` - Order Reservation
+        * `order_deduction` - Order Dispatch Deduction
+        * `manual_adjustment` - Manual Inventory Adjustment
+        * `spoilage_waste` - Fish Spoilage / Weight Loss
+    UnitEnum:
+      enum:
+      - kg
+      - gm
+      - piece
+      - bundle
+      type: string
+      description: |-
+        * `kg` - Kilogram (kg)
+        * `gm` - Gram (gm)
+        * `piece` - Piece (pc)
+        * `bundle` - Bundle
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          title: Email address
+          oneOf:
+          - type: string
+            format: email
+            maxLength: 254
+          - type: string
+            maxLength: 0
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        address:
+          type: string
+          nullable: true
+        avatar_url:
+          nullable: true
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 500
+          - type: string
+            maxLength: 0
+        is_staff:
+          type: boolean
+          title: Staff status
+          description: Designates whether the user can log into this admin site.
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+        last_login:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+      required:
+      - date_joined
+      - id
+      - last_login
+      - username
+    WhatsappStatusEnum:
+      enum:
+      - not_contacted
+      - chat_initiated
+      - price_quoted
+      - confirmed_via_whatsapp
+      - unresponsive
+      type: string
+      description: |-
+        * `not_contacted` - Not Contacted
+        * `chat_initiated` - Chat Initiated
+        * `price_quoted` - Price Quoted
+        * `confirmed_via_whatsapp` - Confirmed via WhatsApp
+        * `unresponsive` - Unresponsive
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
